@@ -72,10 +72,10 @@ const Rating = ({ value, text }) => {
 };
 
 Rating.propTypes = {
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
   text: PropTypes.string.isRequired,
 };
 
-Rating.defaultProps = {};
+Rating.defaultProps = { value: 0 };
 
 export default Rating;

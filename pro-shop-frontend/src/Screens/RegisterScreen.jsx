@@ -11,19 +11,22 @@ import {
 } from 'react-bootstrap';
 import FormContainer from '../Components/FormContainer/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../redux/Actions/userActions';
+import { register } from '../redux/Actions/userActions';
 import Message from '../Components/Message/Message';
 import Loader from '../Components/Loader/Loader';
 
-const LoginScreen = ({ location, history }) => {
+const RegisterScreen = ({ location, history }) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState(null);
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
+  const userRegister = useSelector((state) => state.userRegister);
 
-  const { loading, error, userInfo } = userLogin;
+  const { loading, error, userInfo } = userRegister;
 
   const redirect = location.search ? location.search.split('=')[1] : '/';
 
@@ -35,17 +38,33 @@ const LoginScreen = ({ location, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match');
+    } else {
+      dispatch(register(name, email, password));
+    }
   };
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
+      <h1>Sign Up</h1>
 
+      {message && <Message variant='danger'>{message}</Message>}
       {error && <Message variant='danger'>{error}</Message>}
       {loading && <Loader />}
 
       <Form onSubmit={submitHandler}>
+        <FormGroup controlId='name'>
+          <FormLabel>Name</FormLabel>
+          <FormControl
+            type='text'
+            placeholder='Enter Name'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          ></FormControl>
+        </FormGroup>
+
         <FormGroup controlId='email'>
           <FormLabel>Email Address</FormLabel>
           <FormControl
@@ -66,16 +85,26 @@ const LoginScreen = ({ location, history }) => {
           ></FormControl>
         </FormGroup>
 
+        <FormGroup controlId='confirmPassword'>
+          <FormLabel>Password</FormLabel>
+          <FormControl
+            type='password'
+            placeholder='Enter confirmPassword'
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          ></FormControl>
+        </FormGroup>
+
         <Button type='submit' variant='primary' className='my-3'>
-          Sign In
+          Register
         </Button>
       </Form>
 
       <Row className='py-3'>
         <Col>
-          New Customer?{' '}
-          <Link to={redirect ? `register?redirect=${redirect}` : '/register'}>
-            Register
+          Have an Account?{' '}
+          <Link to={redirect ? `login?redirect=${redirect}` : '/login'}>
+            Login
           </Link>
         </Col>
       </Row>
@@ -83,4 +112,4 @@ const LoginScreen = ({ location, history }) => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;

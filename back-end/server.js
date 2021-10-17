@@ -6,6 +6,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import productRouter from './routes/productRoutes.js';
 import userRouter from './routes/userRouters.js';
+import ordersRouter from './routes/orderRouters.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
+app.use('/api/orders', ordersRouter);
 
 app.use(notFound);
 
